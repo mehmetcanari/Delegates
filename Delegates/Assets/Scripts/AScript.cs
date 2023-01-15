@@ -5,53 +5,55 @@ using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine.Events;
 
-public class AScript : MonoBehaviour
+namespace mehmetcanari.CodeVault
 {
-    [Header("Attributes")]
-    public float _moveTime;
-    public int _yValue;
-    public Ease _easing;
-
-    public delegate void CubeBehaviour();
-    public CubeBehaviour _delegateBehaviour;
-
-    public UnityEvent _eventCalling;
-
-    private void Update()
+    public class AScript : MonoBehaviour
     {
-        switch (GameStates.Instance._state)
+        [Header("Attributes")]
+        public float _moveTime;
+        public int _yValue;
+        public Ease _easing;
+
+        public delegate void CubeBehaviour(); //Defining delegate type
+        public CubeBehaviour _delegateBehaviour; //Creating object of delegate
+
+        private void Update()
         {
-            case States.Play:
-                InputRegister();
-                break;
+            switch (GameStates.Instance._state)
+            {
+                case States.Play:
+                    InputRegister();
+                    break;
+            }
         }
-    }
 
-    private void InputRegister()
-    {
-        if (Input.GetMouseButtonDown(0))
+        private void InputRegister()
         {
-            DelegateRegister();
+            if (Input.GetMouseButtonDown(0))
+            {
+                RegisterDelegateVoids();
 
-            _delegateBehaviour();
-
-            _eventCalling.Invoke();
+                _delegateBehaviour(); //Calling delagate object for action
+            }
         }
-    }
 
-    private void DelegateRegister()
-    {
-        _delegateBehaviour += CubeMovement;
-        _delegateBehaviour += MaterialAccessDelay;
-    }
+        private void RegisterDelegateVoids() //Adding voids into delegate struct
+        {
+            _delegateBehaviour += CubeMovement;
+            _delegateBehaviour += MaterialAccessDelay;
+        }
 
-    private void CubeMovement()
-    {
-        this.transform.DOMove(new Vector3(-2, _yValue, 0), _moveTime).SetEase(_easing);
-    }
+        #region Behaviour Methods
+        private void CubeMovement()
+        {
+            this.transform.DOMove(new Vector3(-2, _yValue, 0), _moveTime).SetEase(_easing);
+        }
 
-    private void MaterialAccessDelay()
-    {
-        gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+        private void MaterialAccessDelay()
+        {
+            gameObject.GetComponent<MeshRenderer>().material.color = Color.red;
+        }
+        #endregion
     }
 }
+

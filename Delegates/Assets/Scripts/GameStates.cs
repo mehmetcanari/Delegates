@@ -1,28 +1,51 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class GameStates : Singleton<GameStates>
+namespace mehmetcanari.CodeVault
 {
-    public States _state;
-
-    public void ChangeState(int _stateIndex)
+    public class GameStates : Singleton<GameStates>
     {
-        switch (_stateIndex)
-        {
-            case 0:
-                _state = States.Finish;
-                break;
+        public States _state;
+        public UnityEvent _stateCalling;
 
-            case 1:
-                _state = States.Play;
-                break;
+        private void Update()
+        {
+            switch (_state == States.Play)
+            {
+                default:
+                    RegisterState();
+                    break;
+            }
+        }
+
+        public void ChangeState(int _stateIndex)
+        {
+            switch (_stateIndex)
+            {
+                case 0:
+                    _state = States.Finish;
+                    break;
+
+                case 1:
+                    _state = States.Play;
+                    break;
+            }
+        }
+
+        private void RegisterState()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                _stateCalling.Invoke();
+            }
         }
     }
-}
 
-public enum States
-{
-    Play,
-    Finish
+    public enum States
+    {
+        Play,
+        Finish
+    }
 }
